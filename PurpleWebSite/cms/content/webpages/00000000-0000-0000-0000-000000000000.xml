@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<page>
+  <revision revisionid="5060adff-cfe9-410d-bbc4-8f0523b104eb" ispublished="true" createdate="3/4/2010 9:27:29 PM" revisedbyusername="admin">
+    <meta>
+      <title>Purple CMS</title>
+      <menutitle>Home page</menutitle>
+      <metadescription>A simple drop in ASP.NET content management system</metadescription>
+      <metakeywords>cms, asp.net, content management system, .net 4.0, c#</metakeywords>
+      <masterpagefilename>Default.master</masterpagefilename>
+      <filename />
+      <forcessl>false</forcessl>
+      <showinmenu>true</showinmenu>
+      <menutype>1</menutype>
+      <sortorder>0</sortorder>
+      <fullurl />
+    </meta>
+    <areas>
+      <area contentplaceholderid="MainContent" controlname=""><![CDATA[<h2>Welcome to Purple CMS!</h2>
+<p>This is a very simple CMS that can drop into any ASP.NET 4.0 site and help manage lots of pages.</p>
+<p>For more information, head to <a href="http://johndyer.name/">http://johndyer.name/</a></p>
+<h3>Getting Started</h3>
+<ul>
+<li>Click "Login" (username=admin, password=password)&nbsp;</li>
+<li>From any page click the "Edit" button and you'll see some editing controls where you can directly edit HTML or use a User Control (*.ascx).</li>
+<li>From the home page, try click "Add Page" which will add another sub page to the site. It will then be added to the main menu.</li>
+<li>You can also see the versions of the page by clicking "Versions"</li>
+</ul>
+<h3>How it Works</h3>
+<p>Purple CMS needs five (5) things to run</p>
+<ul>
+<li>.NET Framework 4.0 (currently RC)</li>
+<li>Purple.Core.dll in the /bin/ folder</li>
+<li>A /cms/ folder with controls and data (see below)</li>
+<li>An configuration entry in web.config</li>
+<li>A Route in global.asax</li>
+</ul>
+<p>By default, all pages, controls, and templates are stored in /cms/ and the content of the site is in /cms/content/. Everything else is yours to change.</p>
+<ul>
+<li>/cms/content/masterpages/ - where normal ASP.NET masterpages live</li>
+<li>/cms/content/controls/ - *.ascx controls you want to drop into pages</li>
+<li>/cms/content/webpages/ - when using the XML provider, this is where your page data is stored</li>
+</ul>]]></area>
+    </areas>
+  </revision>
+  <revision revisionid="1432914b-9f89-445f-b4e2-21dc8d4d9a9e" ispublished="false" createdate="3/4/2010 4:20:47 PM" revisedbyusername="">
+    <meta>
+      <title>Purple CMS</title>
+      <menutitle>Home page</menutitle>
+      <metadescription>A simple drop in ASP.NET content management system</metadescription>
+      <metakeywords>cms, asp.net, content management system, .net 4.0, c#</metakeywords>
+      <masterpagefilename>Default.master</masterpagefilename>
+      <filename />
+      <forcessl>false</forcessl>
+      <showinmenu>true</showinmenu>
+      <menutype>1</menutype>
+      <sortorder>0</sortorder>
+      <fullurl />
+    </meta>
+    <areas>
+      <area contentplaceholderid="MainContent" controlname=""><![CDATA[<h2>Welcome to Purple CMS!</h2>
+<p>This is a very simple CMS that can drop into any ASP.NET 4.0 site and help manage lots of pages.</p>
+<p>For more information, head to <a href="http://johndyer.name/">http://johndyer.name/</a></p>
+<h3>Getting Started</h3>
+<ul>
+<li>Click "Login" (username=admin, password=password)&nbsp;</li>
+<li>From any page click the "Edit" button and you'll see some editing controls where you can directly edit HTML or use a User Control (*.ascx).</li>
+<li>From the home page, try click "Add Page" which will add another sub page to the site. It will then be added to the main menu.</li>
+</ul>
+<h3>How it Works</h3>
+<p>Purple CMS needs five (5) things to run</p>
+<ul>
+<li>.NET Framework 4.0 (currently RC)</li>
+<li>Purple.Core.dll in the /bin/ folder</li>
+<li>A /cms/ folder with controls and data (see below)</li>
+<li>An configuration entry in web.config</li>
+<li>A Route in global.asax</li>
+</ul>
+<p>By default, all pages, controls, and templates are stored in /cms/ and the content of the site is in /cms/content/. Everything else is yours to change.</p>
+<ul>
+<li>/cms/content/masterpages/ - where normal ASP.NET masterpages live</li>
+<li>/cms/content/controls/ - *.ascx controls you want to drop into pages</li>
+<li>/cms/content/webpages/ - when using the XML provider, this is where your page data is stored</li>
+</ul>]]></area>
+    </areas>
+  </revision>
+  <revision revisionid="cca49649-2380-4355-87a4-2f8e55d6fa86" ispublished="false" createdate="3/4/2010 3:10:51 AM" revisedbyusername="admin">
+    <meta>
+      <title>Purple CMS</title>
+      <menutitle>Home page</menutitle>
+      <metadescription>A simple drop in ASP.NET content management system</metadescription>
+      <metakeywords>cms, asp.net, content management system, .net 4.0, c#</metakeywords>
+      <masterpagefilename>Default.master</masterpagefilename>
+      <filename />
+      <forcessl>false</forcessl>
+      <showinmenu>true</showinmenu>
+      <menutype>1</menutype>
+      <sortorder>0</sortorder>
+      <fullurl />
+    </meta>
+    <areas>
+      <area contentplaceholderid="MainContent" controlname=""><![CDATA[<h2>Welcome to Purple CMS!</h2>
+<p>This is a very simple CMS that can drop into any ASP.NET 4.0 site and help manage lots of pages</p>
+<p>To get started, just click "Login" (username=admin, password=password) and then you'll see some editing controls where you can start modifying pages</p>
+<p>By default, everything is stored in /cms/ and the content of the site is in /cms/content/. Everything else is yours to change.</p>
+<ul>
+<li>/cms/content/masterpages/ - where normal ASP.NET masterpages live</li>
+<li>/cms/content/controls/ - *.ascx controls you want to drop into pages</li>
+<li>/cms/content/webpages/ - when using the XML provider, this is where your page data is stored</li>
+</ul>]]></area>
+    </areas>
+  </revision>
+</page>

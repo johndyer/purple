@@ -1,0 +1,26 @@
+﻿<Users>
+  <User>
+    <UserName>admin</UserName>
+    <Password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</Password>
+    <Email>admin@example.com</Email>
+    <LastLoginTime>2007-12-05 20:46:40</LastLoginTime>
+  </User>
+  <User>
+	<UserName>user1</UserName>
+	<Password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</Password>
+	<Email>user1@example.com</Email>
+	<LastLoginTime>2007-12-05 20:46:40</LastLoginTime>
+  </User>
+  <User>
+	<UserName>user2</UserName>
+	<Password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</Password>
+	<Email>user2@example.com</Email>
+	<LastLoginTime>2007-12-05 20:46:40</LastLoginTime>
+  </User>
+  <User>
+	<UserName>user3</UserName>
+	<Password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</Password>
+	<Email>user3@example.com</Email>
+	<LastLoginTime>2007-12-05 20:46:40</LastLoginTime>
+  </User>
+</Users>

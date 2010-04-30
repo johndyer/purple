@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<page>
+  <revision revisionid="63a33e2a-2733-11df-abfb-d07556d89593" ispublished="true" createdate="3/3/2010 9:23:18 PM" revisedbyusername="admin">
+    <meta>
+      <title>Login</title>
+	  <menutitle>Login</menutitle>
+      <metadescription>A page that lets you login</metadescription>
+      <metakeywords></metakeywords>
+      <masterpagefilename>Default.master</masterpagefilename>
+	  <filename>login</filename>
+      <forcessl>false</forcessl>
+      <showinmenu>true</showinmenu>
+      <menutype>1</menutype>
+      <sortorder>0</sortorder>
+	  <fullurl>account/login</fullurl>
+    </meta>
+    <areas>
+      <area contentplaceholderid="MainContent" controlname="login.ascx" />
+    </areas>
+  </revision>
+</page>

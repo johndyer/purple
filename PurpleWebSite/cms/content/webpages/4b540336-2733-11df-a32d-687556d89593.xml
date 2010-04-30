@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<page>
+  <revision revisionid="64b37422-0877-435e-a5c0-617ecb4f71fe" ispublished="true" createdate="3/4/2010 4:15:58 PM" revisedbyusername="">
+    <meta>
+      <title>Account</title>
+      <menutitle>Account</menutitle>
+      <metadescription />
+      <metakeywords />
+      <masterpagefilename>Default.master</masterpagefilename>
+      <filename>account</filename>
+      <forcessl>false</forcessl>
+      <showinmenu>false</showinmenu>
+      <menutype>1</menutype>
+      <sortorder>0</sortorder>
+      <fullurl>account</fullurl>
+    </meta>
+    <areas>
+      <area contentplaceholderid="MainContent" controlname=""><![CDATA[<h2>My account</h2>
+<p>This is just a filler page with no content.</p>]]></area>
+    </areas>
+  </revision>
+  <revision revisionid="c71c6f9e-1e13-430e-bd02-b70dad8ba54a" ispublished="false" createdate="3/3/2010 9:23:18 PM" revisedbyusername="admin">
+    <meta>
+      <title>Account</title>
+      <menutitle>Account</menutitle>
+      <metadescription>
+      </metadescription>
+      <metakeywords>
+      </metakeywords>
+      <masterpagefilename>Default.master</masterpagefilename>
+      <filename>account</filename>
+      <forcessl>false</forcessl>
+      <showinmenu>true</showinmenu>
+      <menutype>1</menutype>
+      <sortorder>0</sortorder>
+      <fullurl>account</fullurl>
+    </meta>
+    <areas>
+      <area contentplaceholderid="MainContent" controlname=""><![CDATA[
+	  	<h2>My acccount</h2><p>This is just a filler page with no content.</p>
+	  ]]></area>
+    </areas>
+  </revision>
+</page>

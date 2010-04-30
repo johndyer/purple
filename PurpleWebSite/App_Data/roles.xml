@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<roles>
+  <role>
+    <name>purple-superadmin</name>
+    <users>
+      <user>admin</user>
+    </users>
+  </role>
+  <role>
+    <name>purple-editor</name>
+    <users>
+      <user>user1</user>
+	  <user>user2</user>
+    </users>
+  </role>
+</roles>

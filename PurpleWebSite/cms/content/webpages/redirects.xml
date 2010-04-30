@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<redirects>
+	<redirect redirectid="374c98f3-535d-4573-b8c2-211c4797c9cb" title="ThM" isactive="true" fromurl="thm" tourl="admissions/degrees/thm" />
+ 	<redirect redirectid="23956a91-c228-4ad8-99ba-0a8992a156c2" title="MACE" isactive="true" fromurl="mace" tourl="admissions/degrees/mace" />
+  <redirect redirectid="dc5a03c0-41cc-4415-a808-16d2d209429d" title="Bib Sac" isactive="true" fromurl="bibsac" tourl="publications/bibliothecasacra" />
+</redirects>

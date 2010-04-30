@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<pages>
+  <page webpageid="00000000-0000-0000-0000-000000000000" parentid="00000000-0000-0000-0000-000000000000" menutitle="site-root" url="site-root" />
+  <page webpageid="4b540336-2733-11df-a32d-687556d89593" parentid="00000000-0000-0000-0000-000000000000" url="account" title="account" menutitle="account" />
+  <page webpageid="63a33e2a-2733-11df-abfb-d07556d89593" parentid="4b540336-2733-11df-a32d-687556d89593" url="account/login" title="Login" menutitle="Login" />
+  <page webpageid="71fe2afc-2733-11df-8fc8-e77556d89593" parentid="00000000-0000-0000-0000-000000000000" url="about" title="about" menutitle="about" />
+  <page webpageid="a4c8faca-9de8-4131-a824-0e6b23aeea7a" parentid="00000000-0000-0000-0000-000000000000" url="mylist" title="mylist" menutitle="mylist" />
+  <page webpageid="86d534b8-ffd7-4acd-a56f-3a12a6cbfd70" parentid="71fe2afc-2733-11df-8fc8-e77556d89593" url="about/news" title="about/news" menutitle="about/news" />
+</pages>
