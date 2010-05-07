@@ -13,11 +13,11 @@ namespace Purple.Controls
 
 
     [ToolboxData("<{0}:BreadCrumbs runat=server></{0}:BreadCrumbs>")]
-    public class BreadCrumbs : WebControl
+    public class BreadCrumbs : Control
 	{
 		
 
-		protected override void RenderContents(HtmlTextWriter output)
+		protected override void Render(HtmlTextWriter output)
 		{
 			Webpage currentWebpage = (this.Page as PurplePage).Webpage;
 

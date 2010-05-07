@@ -7,6 +7,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Purple.Core
 {
@@ -47,7 +49,10 @@ namespace Purple.Core
 		//public string Url { get; set; }
 		public Webpage Webpage { get; set; }
 
-#region Admin controls
+        private static readonly Regex _controlRegex = new Regex(@"\[control:(.*?)\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _controlFixRegex = new Regex(@"<p>\[control:(.*?)\]</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        #region Admin controls
 		private Control AdminControl { get; set; }
 
 		private TextBox webpageFilename;
@@ -65,10 +70,13 @@ namespace Purple.Core
 		private LinkButton webpageSaveButton;
 		private ListControl webpageMasterPageFilename;
 
+        private TextBox webpageContentExpirationDate;
+        private TextBox webpageCommonAreaHeader;
+        private CheckBox webpageIgnoreParentHeader;
+
 		private Button webpageAddButton;
 		private Repeater webpageVersionsRepeater;
 #endregion
-
 
 		#region Page <html> elements
 		private HtmlForm _form = null;
@@ -162,6 +170,9 @@ namespace Purple.Core
 					AdminControl = LoadControl(PurpleSettings.CmsPath + "assets/admincontrols/adminpage.ascx");
 					FindAdminControls();
 
+                    // set master selector
+                    PopulateMasterPageList();
+
 					webpageAddButton.Click += new EventHandler(PurplePageAddButton_Click);
 
 					// fill in the details
@@ -173,6 +184,29 @@ namespace Purple.Core
 					
 					_form.Controls.Add(AdminControl);
 				}
+
+                // add common header to first control if needed
+                string commonHeader = webpage.CommonAreaHeader;
+                if (string.IsNullOrWhiteSpace(commonHeader) && !webpage.IgnoreParentHeader)
+                {
+                    // go back until the parent is null or we find a 
+                    Webpage parent = webpage.Parent;
+                    do 
+                    {
+                        if (!string.IsNullOrWhiteSpace(parent.CommonAreaHeader) ) {
+                            commonHeader= parent.CommonAreaHeader;
+                            break;
+                        }
+                            
+
+                        parent = parent.Parent;
+                    } while (parent != null && !parent.IsSiteRoot);
+
+                }
+                // add it if it exists
+                if (!String.IsNullOrWhiteSpace(commonHeader)) {
+                    ContentPlaceHolders[0].Controls.Add(new LiteralControl(commonHeader));
+                }
 
 
 				// go through the webpage areas
@@ -186,6 +220,120 @@ namespace Purple.Core
 						placeholder = ContentPlaceHolders[0];
 
 
+                    // build control/HTML parts
+                    string content = area.ContentHtml;
+
+                    // fix extra paragraph tags for controls
+                    content = _controlFixRegex.Replace(content, "[control:${1}]");
+
+                    // override with single control
+                    if (!String.IsNullOrWhiteSpace(area.ControlName))
+                    {
+                        content = "[control:" + area.ControlName + "]";
+                    }
+
+
+                    // search for controls, load them and create them                    
+                    int currentPosition = 0;
+                    MatchCollection controlMatches = _controlRegex.Matches(content);
+
+                    if (controlMatches.Count == 0)
+                    {
+                        // Plain HTML
+                        placeholder.Controls.Add(new LiteralControl(area.ContentHtml));
+                    }
+                    else
+                    {
+
+                        foreach (Match controlMatch in controlMatches)
+                        {
+                            // Add literal for content before custom tag should it exist.
+                            if (controlMatch.Index > currentPosition)
+                            {
+                                placeholder.Controls.Add(new LiteralControl(content.Substring(currentPosition, controlMatch.Index - currentPosition)));
+                            }
+
+                            // Now lets add our user control.
+                            try
+                            {
+                                string all = controlMatch.Groups[1].Value.Trim();
+                                Control usercontrol = null;
+
+                                if (!all.EndsWith(".ascx", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    int index = all.IndexOf(".ascx", StringComparison.OrdinalIgnoreCase) + 5;
+                                    usercontrol = LoadControl("~/cms/content/controls/" + all.Substring(0, index));
+
+                                    string parameters = Server.HtmlDecode(all.Substring(index));
+                                    Type type = usercontrol.GetType();
+                                    string[] paramCollection = parameters.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                    foreach (string param in paramCollection)
+                                    {
+                                        string name = param.Split('=')[0].Trim();
+                                        string value = param.Split('=')[1].Trim();
+                                        System.Reflection.PropertyInfo property = type.GetProperty(name);
+                                        property.SetValue(usercontrol, Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture), null);
+                                    }
+                                }
+                                else
+                                {
+                                    usercontrol = LoadControl("~/cms/content/controls/" + all);
+                                }
+
+                                placeholder.Controls.Add(usercontrol);
+
+                                // Now we will update our position.
+                                //currentPosition = controlMatch.Index + controlMatch.Groups[0].Length;
+                            }
+                            catch (Exception controlLoadException)
+                            {
+                                // Whoopss, can't load that control so lets output something that tells the developer that theres a problem.
+                                placeholder.Controls.Add(new LiteralControl("ERROR - UNABLE TO LOAD CONTROL : " + "~/cms/content/controls/" + controlMatch.Groups[1].Value + "<br />" + controlLoadException.ToString()));
+                            }
+
+                            currentPosition = controlMatch.Index + controlMatch.Groups[0].Length;
+                        }
+
+                        // final text
+
+                        // Add literal for content before custom tag should it exist.
+                        if (content.Length > currentPosition)
+                        {
+                            placeholder.Controls.Add(new LiteralControl(content.Substring(currentPosition)));
+                        }
+
+
+
+
+                        // check for form needs
+                        bool requiresForm = CheckRequiresForm(placeholder); ;
+                        if (requiresForm)
+                        {
+                            if (formMode == FormMode.Container)
+                            {
+                                // transfer controls to form                                                                 
+                                System.Web.UI.HtmlControls.HtmlForm form = new System.Web.UI.HtmlControls.HtmlForm();
+                                while (placeholder.HasControls())
+                                {
+                                    form.Controls.Add(placeholder.Controls[0]);
+                                }
+
+                                // add form
+                                placeholder.Controls.Add(form);
+
+                            }
+                            else if (formMode == FormMode.WholePage)
+                            {
+                                AddFormToBody();
+                            }
+                        }
+                    }
+
+
+
+#region old rendercode
+                    /*
 					if (!String.IsNullOrWhiteSpace(area.ControlName))
 					{
 
@@ -196,7 +344,7 @@ namespace Purple.Core
 						if (File.Exists(controlPath))
 						{
 							Control control = LoadControl(controlVPath);
-							bool requiresForm = CheckRequiresForm(placeholder, control); ;
+							bool requiresForm = CheckRequiresForm( control); ;
 							if (requiresForm)
 							{
 								if (formMode == FormMode.Container)
@@ -223,12 +371,102 @@ namespace Purple.Core
 					}
 					else
 					{
-						// just fill with HTML
-						placeholder.Controls.Add(new LiteralControl(area.ContentHtml));
-					}
 
 
-				}
+
+                        // search for controls, load them and create them
+                        string content = area.ContentHtml;
+                        int currentPosition = 0;
+                        MatchCollection controlMatches = _controlRegex.Matches(content);
+
+                        if (controlMatches.Count == 0)
+                        {
+                            // old HTML only code
+                            placeholder.Controls.Add(new LiteralControl(area.ContentHtml));
+                        }
+                        else
+                        {
+
+                            foreach (Match controlMatch in controlMatches)
+                            {
+                                // Add literal for content before custom tag should it exist.
+                                if (controlMatch.Index > currentPosition)
+                                {
+                                    placeholder.Controls.Add(new LiteralControl(content.Substring(currentPosition, controlMatch.Index - currentPosition)));
+                                }
+
+                                // Now lets add our user control.
+                                try
+                                {
+                                    string all = controlMatch.Groups[1].Value.Trim();
+                                    Control usercontrol = null;
+
+                                    if (!all.EndsWith(".ascx", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        int index = all.IndexOf(".ascx", StringComparison.OrdinalIgnoreCase) + 5;
+                                        usercontrol = LoadControl("~/cms/content/controls/" + all.Substring(0, index));
+
+                                        string parameters = Server.HtmlDecode(all.Substring(index));
+                                        Type type = usercontrol.GetType();
+                                        string[] paramCollection = parameters.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                        foreach (string param in paramCollection)
+                                        {
+                                            string name = param.Split('=')[0].Trim();
+                                            string value = param.Split('=')[1].Trim();
+                                            System.Reflection.PropertyInfo property = type.GetProperty(name);
+                                            property.SetValue(usercontrol, Convert.ChangeType(value, property.PropertyType, CultureInfo.InvariantCulture), null);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        usercontrol = LoadControl("~/cms/content/controls/" + all);
+                                    }
+
+                                    placeholder.Controls.Add(usercontrol);
+
+                                    // Now we will update our position.
+                                    //currentPosition = myMatch.Index + myMatch.Groups[0].Length;
+                                }
+                                catch (Exception controlLoadException)
+                                {
+                                    // Whoopss, can't load that control so lets output something that tells the developer that theres a problem.
+                                    placeholder.Controls.Add(new LiteralControl("ERROR - UNABLE TO LOAD CONTROL : " + "~/cms/content/controls/" + controlMatch.Groups[1].Value + "<br />" + controlLoadException.ToString()));
+                                }
+
+                                currentPosition = controlMatch.Index + controlMatch.Groups[0].Length;
+                            }
+
+
+                            // check for form needs
+                            bool requiresForm = CheckRequiresForm(placeholder); ;
+                            if (requiresForm)
+                            {
+                                if (formMode == FormMode.Container)
+                                {
+                                    // transfer controls to form                                                                 
+                                    System.Web.UI.HtmlControls.HtmlForm form = new System.Web.UI.HtmlControls.HtmlForm();
+                                    while (placeholder.HasControls())
+                                    {
+                                        form.Controls.Add(placeholder.Controls[0]);
+                                    }
+
+                                    // add form
+                                    placeholder.Controls.Add(form);
+
+                                }
+                                else if (formMode == FormMode.WholePage)
+                                {
+                                    AddFormToBody();
+                                }
+                            }
+                        }
+
+                    }
+                    */
+#endregion
+
+                }
 
 
 			}
@@ -264,32 +502,18 @@ namespace Purple.Core
 				webpageUrl.Text = webpage.Url;
 				webpageForceSsl.Checked = webpage.ForceSsl;
 				webpageShowInMenu.Checked = webpage.ShowInMenu;
-				webpageSortOrder.Text = webpage.SortOrder.ToString() ;				
+				webpageSortOrder.Text = webpage.SortOrder.ToString() ;
+
+                webpageCommonAreaHeader.Text = webpage.CommonAreaHeader;
+                webpageContentExpirationDate.Text = webpage.ContentExpirationDate.ToString();
+                webpageIgnoreParentHeader.Checked = webpage.IgnoreParentHeader;
 				
 				// menu type enum
 				
-				string[] menuTypeNames = Enum.GetNames(typeof(MenuType));
-				Array menuTypeValues = Enum.GetValues(typeof(MenuType));
-				for (int i = 0; i < menuTypeNames.Length; i++ )
-				{
-					webpageMenuType.Items.Add(new ListItem(menuTypeNames[i])); //, menuTypeValues.GetValue(i).ToString()));
-				}
-				if (webpageMenuType.Items.FindByValue(webpage.MenuType.ToString()) != null)
-					webpageMenuType.Items.FindByValue(webpage.MenuType.ToString()).Selected = true;
+
 
 				// master pages
-				List<string> masterPages = new List<string>();
-				UtilityMethods.FindFilesRecursive(masterPages, "*.master", Server.MapPath(PurpleSettings.CmsPath + "content/masterpages/"), true);
-				masterPages.Sort();
-				
-				//webpageMasterPageFilename.DataSource = masterPages;
-			//	webpageMasterPageFilename.DataBind();
-				foreach (string masterPage in masterPages)
-				{
-					webpageMasterPageFilename.Items.Add(new ListItem("<img src=\"" + ResolveClientUrl(PurpleSettings.CmsPath + "content/masterpages/") + masterPage + ".png\" /><span>" + masterPage + "</span>", masterPage));
-				}
-				if (webpageMasterPageFilename.Items.FindByValue(webpage.MasterPageFilename.Replace(".master","")) != null)
-					webpageMasterPageFilename.Items.FindByValue(webpage.MasterPageFilename.Replace(".master", "")).Selected = true;
+                PopulateMasterPageList();
 
 				// permissions
 				string[] allEditors = System.Web.Security.Roles.GetUsersInRole(PurpleSettings.RoleEditor);				
@@ -368,6 +592,30 @@ namespace Purple.Core
 			base.OnInit(e);
 		}
 
+        private void PopulateMasterPageList()
+        {
+            List<string> masterPages = new List<string>();
+            UtilityMethods.FindFilesRecursive(masterPages, "*.master", Server.MapPath(PurpleSettings.CmsPath + "content/masterpages/"), true);
+            masterPages.Sort();
+
+            foreach (string masterPage in masterPages)
+            {
+                webpageMasterPageFilename.Items.Add(new ListItem("<img src=\"" + ResolveClientUrl(PurpleSettings.CmsPath + "content/masterpages/") + masterPage + ".png\" /><span>" + masterPage + "</span>", masterPage));
+            }
+            if (webpageMasterPageFilename.Items.FindByValue(this.Webpage.MasterPageFilename.Replace(".master", "")) != null)
+                webpageMasterPageFilename.Items.FindByValue(this.Webpage.MasterPageFilename.Replace(".master", "")).Selected = true;
+
+            // menu types
+            string[] menuTypeNames = Enum.GetNames(typeof(MenuType));
+            Array menuTypeValues = Enum.GetValues(typeof(MenuType));
+            for (int i = 0; i < menuTypeNames.Length; i++)
+            {
+                webpageMenuType.Items.Add(new ListItem(menuTypeNames[i])); //, menuTypeValues.GetValue(i).ToString()));
+            }
+            if (webpageMenuType.Items.FindByValue(this.Webpage.MenuType.ToString()) != null)
+                webpageMenuType.Items.FindByValue(this.Webpage.MenuType.ToString()).Selected = true;
+        }
+
 		private void FindAdminControls()
 		{
 			webpageFilename = AdminControl.FindControl("WebpageFilename") as TextBox;
@@ -386,6 +634,10 @@ namespace Purple.Core
 			webpageMasterPageFilename = AdminControl.FindControl("WebpageMasterPageFilename") as ListControl;
 			webpageAddButton = AdminControl.FindControl("WebpageAddButton") as Button;
 			webpageVersionsRepeater = AdminControl.FindControl("WebpageRevisionsRepeater") as Repeater;
+
+            webpageCommonAreaHeader = AdminControl.FindControl("WebpageCommonAreaHeader") as TextBox;
+            webpageContentExpirationDate = AdminControl.FindControl("WebpageContentExpirationDate") as TextBox;
+            webpageIgnoreParentHeader= AdminControl.FindControl("WebpageIgnoreParentHeader") as CheckBox;
 		}
 
 		private bool GetUserPermissions()
@@ -466,6 +718,20 @@ namespace Purple.Core
 			webpage.ForceSsl = webpageForceSsl.Checked;
 			webpage.ShowInMenu = webpageShowInMenu.Checked;
 
+
+            webpage.CommonAreaHeader = webpageCommonAreaHeader.Text;
+            webpage.IgnoreParentHeader = webpageIgnoreParentHeader.Checked;
+            DateTime expiresDate = DateTime.MinValue;
+            if (DateTime.TryParse(webpageContentExpirationDate.Text, out expiresDate))
+            {
+                webpage.ContentExpirationDate = expiresDate;
+            }
+            else
+            {
+                webpage.ContentExpirationDate = DateTime.MinValue;
+            }
+
+
 			webpage.MenuType = (MenuType) Enum.Parse( typeof(MenuType), webpageMenuType.SelectedValue);
 
 			int menuSortOrder = 0;
@@ -528,7 +794,8 @@ namespace Purple.Core
 			newpage.FullUrl = newpage.Url;
 			newpage.ForceSsl = false;
 			newpage.ShowInMenu = true;
-			newpage.MasterPageFilename = this.Webpage.MasterPageFilename; //  PurpleSettings.DefaultMasterPageFilename;
+            newpage.MasterPageFilename = webpageMasterPageFilename.SelectedValue + ".master"; // this.Webpage.MasterPageFilename; //  PurpleSettings.DefaultMasterPageFilename;
+            newpage.MenuType = (MenuType)Enum.Parse(typeof(MenuType), webpageMenuType.SelectedValue);
 
 			WebpageArea area = new WebpageArea();
 			area.ContentPlaceHolderID = ContentPlaceHolders[0].ID;
@@ -641,7 +908,7 @@ namespace Purple.Core
 			return false;
 		}
 
-		private bool CheckRequiresForm(ContentPlaceHolder container, Control control)
+		private bool CheckRequiresForm(Control control)
 		{
 
 			bool hasForm = (FindControls<HtmlForm>(this.Master).Count > 0);

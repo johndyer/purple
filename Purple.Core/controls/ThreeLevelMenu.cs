@@ -11,7 +11,7 @@ namespace Purple.Core.Controls
 {
 	[DefaultProperty("Text")]
 	[ToolboxData("<{0}:MenuControl runat=server></{0}:MenuControl>")]
-	public class ThreeLevelMenu : WebControl
+	public class ThreeLevelMenu : Control
 	{
 		[Bindable(true)]
 		[Category("Appearance")]	

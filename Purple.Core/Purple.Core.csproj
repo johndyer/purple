@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="configuration\PurpleSettings.cs" />
     <Compile Include="configuration\UtilityMethods.cs" />
-    <Compile Include="controls\ThreeLevelMenu.cs" />
     <Compile Include="data\components\CustomRouteEntries.cs" />
     <Compile Include="data\components\UrlRedirects.cs" />
     <Compile Include="data\objects\CustomRouteEntry.cs" />

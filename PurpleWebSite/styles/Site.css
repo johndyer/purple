@@ -10,6 +10,10 @@ body
     padding: 0px;
     color: #696969;
 }
+.mceContentBody, .richEditor  
+{
+    background: #fff;
+}
 
 a:link, a:visited
 {
@@ -304,7 +308,7 @@ div.accountInfo
 .content 
 {
 	float: right;
-	width: 600px;
+	width: 650px;
 }
 
 .sidemenu  

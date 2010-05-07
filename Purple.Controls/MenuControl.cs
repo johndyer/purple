@@ -25,7 +25,7 @@ namespace Purple.Controls
 
 
 	[ToolboxData("<{0}:MenuControl runat=server></{0}:MenuControl>")]
-	public class MenuControl : WebControl
+    public class MenuControl : Control
 	{
 		[Bindable(true)]
 		[Category("Appearance")]	
@@ -81,7 +81,7 @@ namespace Purple.Controls
 			}
 		}
 
-		protected override void RenderContents(HtmlTextWriter output)
+		protected override void Render(HtmlTextWriter output)
 		{
 			Webpage currentWebpage = (this.Page as PurplePage).Webpage;
 			Webpage activeWebpage = null;

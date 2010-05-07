@@ -32,19 +32,47 @@
 				<td>Default URL</td>
 				<td><asp:Label id="WebpageFilenamePrefix" runat="server" /><span id="WebpageFilenameDisplay">empty</span>
 			</tr>
+			<tr>
+				<td>Menu Type</td>
+				<td><asp:DropDownList ID="WebpageMenuType" runat="server" /></td>
+			</tr>
 		</table>
 	</fieldset>
+
+	<fieldset>
+		<legend>MasterPage</legend>
+		<asp:RadioButtonList ID="WebpageMasterPageFilename" runat="Server" RepeatLayout="UnorderedList" CssClass="masterpages"></asp:RadioButtonList>
+	</fieldset>
+
+	
 	<asp:Button ID="WebpageAddButton" Text="Add Subpage" runat="server" />
 </div>
 
 <div id="admin-page-versions-box" class="admin-box" style="display:none;">
 	<h5>Page Versions</h5>
 	<asp:Repeater ID="WebpageRevisionsRepeater" runat="server">
-		<HeaderTemplate><ul></HeaderTemplate>
+		<HeaderTemplate>
+            <table>
+                <thead>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>        
+        </HeaderTemplate>
 		<ItemTemplate>
-			<li><%# Eval("RevisedDate", "{0:MM/dd/yy mm:HH tt}") %> by <%# Eval("RevisedByUsername") %> (<%# Eval("IsPublished") %>)	</li>
+			        <tr>
+                        <td><%# Eval("RevisedDate", "{0:MM/dd/yy mm:HH tt}") %></td>
+                        <td><%# Eval("RevisedByUsername") %></td>
+                        <td><%# Eval("IsPublished") %></td>
+                        <td><input type="button" value="Publish" /></td>
+                    </tr>
 		</ItemTemplate>
-		<HeaderTemplate></ul></HeaderTemplate>
+		<HeaderTemplate>
+                </tbody>
+            </table>
+        </HeaderTemplate>
 	</asp:Repeater>
 </div>
 

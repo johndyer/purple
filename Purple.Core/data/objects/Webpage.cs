@@ -32,13 +32,17 @@ namespace Purple.Core
 			MetaDescription = string.Empty;
 			MetaKeywords = string.Empty;
 			Areas = new List<WebpageArea>();
+
+            CommonAreaHeader = string.Empty;
+            IgnoreParentHeader = false;
+            ContentExpirationDate = DateTime.MinValue;
 		}
 
 		public bool IsEditable { get; private set; }		
 		public string Editors { get; set; }
 		
-		public string RevisedByUsername { get; set; } // also site map
-		public DateTime RevisedDate { get; set; } // where to appear in the menu		
+		public string RevisedByUsername { get; set; }
+		public DateTime RevisedDate { get; set; }
 
 		public bool ShowInMenu { get; set; } // also site map
 		public MenuType MenuType { get; set; } // where to appear in the menu		
@@ -54,6 +58,13 @@ namespace Purple.Core
 		public string MasterPageFilename { get; set;}		
 		public string MetaDescription { get; set; }
 		public string MetaKeywords{ get; set; }
+
+        /// <summary>
+        /// HTML shared by all subpages
+        /// </summary>
+        public string CommonAreaHeader { get; set; }
+        public bool IgnoreParentHeader { get; set; }
+        public DateTime ContentExpirationDate { get; set; }
 
 		public List<WebpageArea> Areas { get; private set; }		
 

@@ -6,7 +6,8 @@
 
 <div class="purple-admin-area-edit">
 	<div class="purple-admin-area-panel">
-		Control: <asp:DropDownList ID="ControlName" runat="server" ClientIDMode="AutoID" /> Upload: <asp:FileUpload ID="ControlUploadFile"  ClientIDMode="AutoID" runat="server" /> to <asp:DropDownList ID="ControlUploadFolder" runat="server" ClientIDMode="AutoID" /><asp:Button ID="ControlUploadButton" Text="Upload" ClientIDMode="AutoID" runat="server" />				
+		Control: <asp:DropDownList ID="ControlName" runat="server" ClientIDMode="AutoID" /> 
+        <br />Upload: <asp:FileUpload ID="ControlUploadFile"  ClientIDMode="AutoID" runat="server" /> to <asp:DropDownList ID="ControlUploadFolder" runat="server" ClientIDMode="AutoID" /><asp:Button ID="ControlUploadButton" Text="Upload" ClientIDMode="AutoID" runat="server" />				
 	</div>
 	<div class="purple-admin-html-editor">
 		HTML<br/>

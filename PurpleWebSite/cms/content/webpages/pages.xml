@@ -6,4 +6,7 @@
   <page webpageid="71fe2afc-2733-11df-8fc8-e77556d89593" parentid="00000000-0000-0000-0000-000000000000" url="about" title="about" menutitle="about" />
   <page webpageid="a4c8faca-9de8-4131-a824-0e6b23aeea7a" parentid="00000000-0000-0000-0000-000000000000" url="mylist" title="mylist" menutitle="mylist" />
   <page webpageid="86d534b8-ffd7-4acd-a56f-3a12a6cbfd70" parentid="71fe2afc-2733-11df-8fc8-e77556d89593" url="about/news" title="about/news" menutitle="about/news" />
+  <page webpageid="038f2ece-0154-480c-aa13-91c3842e709e" parentid="00000000-0000-0000-0000-000000000000" url="pagewithheader" title="pagewithheader" menutitle="pagewithheader" />
+  <page webpageid="482ce81f-eafd-45e2-bcbc-76171bb19795" parentid="038f2ece-0154-480c-aa13-91c3842e709e" url="pagewithheader/inherits" title="pagewithheader/inherits" menutitle="pagewithheader/inherits" />
+  <page webpageid="09fb07b3-f68d-4973-af0a-bb0a74f4c907" parentid="038f2ece-0154-480c-aa13-91c3842e709e" url="pagewithheader/ignoresheader" title="pagewithheader/ignoresheader" menutitle="pagewithheader/ignoresheader" />
 </pages>

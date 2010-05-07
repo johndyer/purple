@@ -118,6 +118,15 @@ namespace Purple.Core
 			return value;
 		}
 
+        private DateTime GetSubNodeDateTime(XmlNode node, string path, DateTime defaultValue)
+        {
+            DateTime value = defaultValue;
+            XmlNode subNode = node.SelectSingleNode(path);
+            if (subNode == null || !DateTime.TryParse(subNode.InnerText, out value))
+                value = defaultValue;
+            return value;
+        }
+
 		private string GetSubNodeString(XmlNode node, string path, string defaultValue)
 		{
 			string value = defaultValue;
@@ -165,6 +174,10 @@ namespace Purple.Core
 			webpage.MenuType = (MenuType) GetSubNodeInt(node, "meta/menutype", 0);
 			webpage.FullUrl = GetSubNodeString(node, "meta/fullurl", "");
 			webpage.Editors = GetSubNodeString(node, "meta/editors", "");
+
+            webpage.ContentExpirationDate = GetSubNodeDateTime(node, "meta/contentexpirationdate", DateTime.MinValue);
+            webpage.CommonAreaHeader = GetSubNodeString(node, "meta/commonareaheader", "");
+            webpage.IgnoreParentHeader = GetSubNodeBoolean(node, "meta/IgnoreParentHeader", false);
 
 			
 			// process areas
@@ -290,7 +303,12 @@ namespace Purple.Core
 			writer.WriteElementString("sortorder", webpage.SortOrder.ToString().ToLower());
 			writer.WriteElementString("fullurl", webpage.FullUrl);
 			writer.WriteElementString("editors", webpage.Editors);
-			writer.WriteEndElement(); // meta
+
+            writer.WriteElementString("contentexpirationdate", webpage.ContentExpirationDate.ToUniversalTime().ToString());
+            writer.WriteElementString("commonareaheader", webpage.CommonAreaHeader);
+            writer.WriteElementString("ignoreparentheader", webpage.IgnoreParentHeader.ToString().ToLower());
+			
+            writer.WriteEndElement(); // meta
 
 
 			writer.WriteStartElement("areas");
